@@ -28,9 +28,6 @@ module.exports = function () {
     post_inspect.reset(0);
     inspect.reset(0);
 
-    // start_solve += 1;
-    // start_inspect += 1;
-
     solveUtils.eraseInspectSolveLines();
   }
 
@@ -168,6 +165,8 @@ module.exports = function () {
     for(var i = 0; i < solveSink.length; i++) {
       writeLocal(solveSink[i].solveTime, solveSink[i].scramble);
     }
+
+    solveSink = [];
   }
 
   var exitApplication = function () {
@@ -240,8 +239,7 @@ module.exports = function () {
         clc.blue(typeof last_solve === 'number' ? solveUtils.prettify(num_solves < 5 ? last_solve : ao5) : 'DNF'));
     }
 
-    charm.position(1, solveUtils.getStartInspect() + 1);
-    solveUtils.botSay('How did you fare? Press + to add penalty or d to set DNF.');
+    solveUtils.writeAt(1, solveUtils.getStartInspect() + 1, 'How did you fare? Press + to add penalty, d to set DNF or space to continue')
 
     last_solve = solveTime;
   }
@@ -300,7 +298,14 @@ module.exports = function () {
     }
 
     if(!inspecting && !post_inspecting && solving && !post_solving) {
+      // Solving has ended
       finishSolving();
+
+      return;
+    }
+
+    if(!inspecting && !post_inspecting && !solving && post_solving) {
+      resetSolve();
 
       return;
     }
