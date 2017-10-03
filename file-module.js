@@ -17,7 +17,7 @@ exports.checkLocalFile = function () {
     var mkdirp = require('mkdirp');
     var localSaveDir = require('./constants').LOCAL_SAVE_DIR;
     mkdirp.sync(localSaveDir);
-    touch(filepath);
+    touch.sync(filepath);
   }
 
   return filepath;
@@ -25,15 +25,11 @@ exports.checkLocalFile = function () {
 
 
 exports.localFileExists = function () {
-  var fileExists = require('file-exists');
-
-  return fileExists(require('./constants').LOCAL_FILE_PATH);
+  return require('fs').existsSync(require('./constants').LOCAL_FILE_PATH);
 };
 
 exports.pushedFileExists = function () {
-  var fileExists = require('file-exists');
-
-  return fileExists(require('./constants').PUSHED_FILE_PATH);
+  return require('fs').existsSync(require('./constants').PUSHED_FILE_PATH);
 };
 
 exports.deleteLocalFile = function () {
@@ -45,14 +41,13 @@ exports.deleteLocalFile = function () {
 
 exports.writeToPushed = function (glob) {
   var fs = require('fs');
-  var touch = require('touch');
   var xdg = require('xdg-basedir');
   var filepath = require('./constants').PUSHED_FILE_PATH;
 
   if(!fs.existsSync(filepath)) {
     var mkdirp = require('mkdirp');
-    mkdirp.sync(xdg.data + '/cube');
-    touch(filepath);
+    var localSaveDir = require('./constants').LOCAL_SAVE_DIR;
+    mkdirp.sync(localSaveDir);
   }
 
   var fs = require('fs');
